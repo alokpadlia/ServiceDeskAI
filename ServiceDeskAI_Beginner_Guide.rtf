@@ -1,0 +1,194 @@
+{\rtf1\ansi\deff0
+{\fonttbl{\f0 Calibri;}}
+\fs24
+\b ServiceDesk AI Lite - Beginner Step-by-Step Guide (Mac)\b0\par
+\par
+\b Goal:\b0  Create the full ServiceDesk AI Lite project from scratch.\par
+\b Project Folder Example:\b0  /Users/alokpadlia/Desktop/Alok Padlia_2026 Learning/SimplyLearnPython/Project\par
+\par
+\b 1) Create project folder and enter it\b0\par
+Run:\par
+mkdir ServiceDeskAI_Lite\par
+cd ServiceDeskAI_Lite\par
+\par
+\b 2) Create virtual environment\b0\par
+Run:\par
+python3 -m venv venv\par
+source venv/bin/activate\par
+\par
+Upgrade pip:\par
+python3 -m pip install --upgrade pip\par
+\par
+\b 3) Install dependencies\b0\par
+Run:\par
+python3 -m pip install django pandas\par
+\par
+Check Django version:\par
+python3 -m django --version\par
+\par
+\b 4) Create Django project\b0\par
+Run:\par
+django-admin startproject ServiceDeskAI .\par
+\par
+You should now see:\par
+- manage.py\par
+- ServiceDeskAI/\par
+\par
+\b 5) Create required directories\b0\par
+Run:\par
+mkdir -p ServiceDeskAI/tickets/templates/tickets\par
+mkdir -p ServiceDeskAI/tickets/migrations\par
+mkdir -p ServiceDeskAI/scripts\par
+mkdir -p ServiceDeskAI/logs\par
+touch ServiceDeskAI/tickets/__init__.py\par
+touch ServiceDeskAI/tickets/migrations/__init__.py\par
+\par
+\b 6) Create app files in ServiceDeskAI/tickets\b0\par
+Create these files:\par
+- apps.py\par
+- models.py\par
+- forms.py\par
+- admin.py\par
+- service.py\par
+- analytics.py\par
+- view.py\par
+- views.py\par
+- urls.py\par
+- tests.py\par
+\par
+\b 7) apps.py content\b0\par
+Put in ServiceDeskAI/tickets/apps.py:\par
+from django.apps import AppConfig\par
+\par
+class TicketsConfig(AppConfig):\par
+    default_auto_field = "django.db.models.BigAutoField"\par
+    name = "ServiceDeskAI.tickets"\par
+\par
+\b 8) models.py\b0\par
+Add your Ticket model with fields:\par
+- title, description\par
+- category, priority, status, analysis_status\par
+- ai_summary, ai_resolution\par
+- created_at, updated_at\par
+\par
+\b 9) forms.py\b0\par
+Create TicketForm (ModelForm) using fields:\par
+- title\par
+- description\par
+- status\par
+\par
+\b 10) admin.py\b0\par
+Register Ticket with admin and configure:\par
+- list_display\par
+- list_filter\par
+- search_fields\par
+\par
+\b 11) service.py\b0\par
+Add helper functions:\par
+- classify_category()\par
+- suggest_priority()\par
+- generate_summary()\par
+- suggest_resolution()\par
+- analyze_ticket()\par
+- start_ticket_analysis()\par
+\par
+\b 12) analytics.py\b0\par
+Add get_ticket_analytics() that returns:\par
+- total_tickets\par
+- category_counts\par
+- priority_counts\par
+- status_counts\par
+- analysis_status_counts\par
+- recent_tickets\par
+\par
+\b 13) view.py and views.py\b0\par
+In view.py, add:\par
+- ticket_create\par
+- ticket_list\par
+- ticket_detail\par
+- analytics_view\par
+\par
+In views.py, add:\par
+from .view import *\par
+\par
+\b 14) tickets urls.py\b0\par
+In ServiceDeskAI/tickets/urls.py:\par
+from django.urls import path\par
+from . import views\par
+\par
+urlpatterns = [\par
+    path("", views.ticket_list, name="ticket_list"),\par
+    path("create/", views.ticket_create, name="ticket_create"),\par
+    path("<int:ticket_id>/", views.ticket_detail, name="ticket_detail"),\par
+    path("analytics/", views.analytics_view, name="analytics"),\par
+]\par
+\par
+\b 15) Configure ServiceDeskAI/settings.py\b0\par
+Set key values:\par
+- INSTALLED_APPS includes "ServiceDeskAI.tickets"\par
+- ROOT_URLCONF = "ServiceDeskAI.urls"\par
+- WSGI_APPLICATION = "ServiceDeskAI.wsgi.application"\par
+- DATABASES uses sqlite3\par
+- Add logs directory creation and LOGGING config\par
+\par
+\b 16) Configure ServiceDeskAI/urls.py\b0\par
+Use routes:\par
+- admin/\par
+- root redirect to ticket_list\par
+- tickets/ include("ServiceDeskAI.tickets.urls")\par
+\par
+\b 17) Create templates\b0\par
+Under ServiceDeskAI/tickets/templates/tickets create:\par
+- base.html\par
+- ticket_form.html\par
+- ticket_list.html\par
+- ticket_detail.html\par
+- analytics.html\par
+\par
+\b 18) Create scripts\b0\par
+Windows script (optional):\par
+ServiceDeskAI/scripts/run_windows.bat\par
+\par
+Mac script:\par
+ServiceDeskAI/scripts/run_mac.sh\par
+Content:\par
+#!/bin/bash\par
+cd "$(dirname "$0")/../.."\par
+source venv/bin/activate\par
+python3 manage.py runserver\par
+\par
+Make executable:\par
+chmod +x ServiceDeskAI/scripts/run_mac.sh\par
+\par
+\b 19) Run migrations\b0\par
+python3 manage.py makemigrations\par
+python3 manage.py migrate\par
+\par
+\b 20) Create admin user\b0\par
+python3 manage.py createsuperuser\par
+\par
+\b 21) Run server\b0\par
+python3 manage.py runserver\par
+\par
+Open in browser:\par
+- http://127.0.0.1:8000/tickets/\par
+- http://127.0.0.1:8000/tickets/create/\par
+- http://127.0.0.1:8000/tickets/analytics/\par
+- http://127.0.0.1:8000/admin/\par
+\par
+\b 22) If ticket list is empty\b0\par
+Create sample ticket:\par
+python3 manage.py shell -c "from ServiceDeskAI.tickets.models import Ticket; Ticket.objects.create(title='Internet not working', description='Office internet is down since morning.')"\par
+\par
+\b Quick Troubleshooting\b0\par
+1. ModuleNotFoundError for tickets:\par
+   - Ensure app path is ServiceDeskAI.tickets in settings and apps.py.\par
+2. View import issues:\par
+   - Ensure views.py exists and re-exports from view.py.\par
+3. Server not starting:\par
+   - Activate venv and verify dependencies are installed.\par
+4. No data showing:\par
+   - Create ticket from form or shell.\par
+\par
+\b End of Beginner Guide\b0\par
+}
